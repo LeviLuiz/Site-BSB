@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Solicitar orçamento — BSB Info</title>
+
+    <link rel="icon" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>BSB Info</h1>
+
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="index.html#servicos">Serviços</a>
+            <a href="index.html#sobre">Sobre</a>
+            <a href="index.html#portfolio">Portfólio</a>
+            <a href="index.html#faq">FAQ</a>
+            <a href="index.html#contato">Contato</a>
+        </nav>
+    </header>
+
+
+    <main>
+
+        <section class="contato">
+
+            <p class="destaque">SOLICITAR ORÇAMENTO</p>
+
+            <h2>Conte-nos o que aconteceu.</h2>
+
+            <p>
+                Preencha as informações abaixo para solicitar
+                um orçamento.
+            </p>
+
+
+            <form id="form-orcamento">
+
+                <div class="campo">
+                    <label for="nome">Nome</label>
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Seu nome"
+                        required
+                    >
+                </div>
+
+
+                <div class="campo">
+                    <label for="telefone">Telefone</label>
+                    <input
+                        type="tel"
+                        id="telefone"
+                        name="telefone"
+                        placeholder="Seu telefone"
+                        required
+                    >
+                </div>
+
+
+                <div class="campo">
+                    <label for="equipamento">Equipamento</label>
+
+                    <select id="equipamento" name="equipamento" required>
+
+                        <option value="">
+                            Selecione o equipamento
+                        </option>
+
+                        <option value="Computador">
+                            Computador
+                        </option>
+
+                        <option value="Celular">
+                            Celular
+                        </option>
+
+                        <option value="Impressora">
+                            Impressora
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="campo">
+                    <label for="problema">Problema</label>
+
+                    <textarea
+                        id="problema"
+                        name="problema"
+                        rows="6"
+                        placeholder="Descreva o problema do equipamento..."
+                        required
+                    ></textarea>
+                </div>
+
+
+                <button type="submit" class="botao">
+                    Enviar solicitação
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        <h3>BSB Info</h3>
+
+        <p>
+            Assistência técnica e soluções em tecnologia.
+        </p>
+
+        <p>
+            © 2026 BSB Info — Projeto demonstrativo
+        </p>
+
+    </footer>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
