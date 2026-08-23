@@ -9,7 +9,7 @@ formulario.addEventListener("submit", async (event) => {
     const problema = document.getElementById("problema").value;
 
     try {
-        const resposta = await fetch("http://localhost:3000/orcamentos", {
+        const resposta = await fetch("https://bsb-info-api.onrender.com/orcamentos", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=UTF-8"
