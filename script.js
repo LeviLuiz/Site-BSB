@@ -5,6 +5,12 @@ formulario.addEventListener("submit", async (event) => {
 
     event.preventDefault();
 
+    const botao = formulario.querySelector('button[type="submit"]');
+
+    // Impede envio duplicado
+    botao.disabled = true;
+    botao.textContent = "Enviando...";
+
     const nome = document.getElementById("nome").value;
     const telefone = telefoneInput.value;
     const equipamento = document.getElementById("equipamento").value;
@@ -16,11 +22,9 @@ formulario.addEventListener("submit", async (event) => {
             "https://bsb-info-api.onrender.com/orcamentos",
             {
                 method: "POST",
-
                 headers: {
                     "Content-Type": "application/json; charset=UTF-8"
                 },
-
                 body: JSON.stringify({
                     nome,
                     telefone,
@@ -52,10 +56,13 @@ formulario.addEventListener("submit", async (event) => {
             "Não foi possível enviar o orçamento. Tente novamente."
         );
 
+    } finally {
+
+        // Libera o botão novamente
+        botao.disabled = false;
+        botao.textContent = "Enviar solicitação";
     }
-
 });
-
 
 // Somente números no telefone
 
