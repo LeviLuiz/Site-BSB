@@ -8,19 +8,26 @@ formulario.addEventListener("submit", async (event) => {
     const equipamento = document.getElementById("equipamento").value;
     const problema = document.getElementById("problema").value;
 
+    telefone.addEventListener("input", () => {
+        telefone.value = telefone.value.replace(/\D/g, "");
+    });
+
     try {
-        const resposta = await fetch("https://bsb-info-api.onrender.com/orcamentos", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json; charset=UTF-8"
+        const resposta = await fetch(
+            "https://bsb-info-api.onrender.com/orcamentos",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json; charset=UTF-8",
+                },
+                body: JSON.stringify({
+                    nome,
+                    telefone,
+                    equipamento,
+                    problema,
+                }),
             },
-            body: JSON.stringify({
-                nome,
-                telefone,
-                equipamento,
-                problema
-            })
-        });
+        );
 
         const dados = await resposta.json();
 
@@ -33,7 +40,6 @@ formulario.addEventListener("submit", async (event) => {
         formulario.reset();
 
         console.log("Orçamento criado:", dados);
-
     } catch (erro) {
         console.error(erro);
 
