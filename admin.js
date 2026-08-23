@@ -1,4 +1,4 @@
-const API_URL = "bsb-info-api.onrender.com";
+const API_URL = "https://bsb-info-api.onrender.com";
 
 const lista = document.getElementById("orcamentos");
 const mensagem = document.getElementById("mensagem");
@@ -8,7 +8,7 @@ const ultimo = document.getElementById("ultimo");
 
 const atualizar = document.getElementById("atualizar");
 
-const modal = document.getElementById("modal");
+const modal = document.getElementById("modal"); 
 const fecharModal = document.getElementById("fecharModal");
 
 const modalNome = document.getElementById("modalNome");
