@@ -28,14 +28,15 @@ formularioLogin.addEventListener("submit", async (event) => {
             throw new Error(dados.erro || "E-mail ou senha incorretos");
         }
 
-        // Guarda o token
+        if (!dados.token) {
+            throw new Error("A API não enviou o token.");
+        }
+
         localStorage.setItem("token", dados.token);
 
-        // Esconde o login
         login.style.display = "none";
 
-        // Carrega os orçamentos
-        carregarOrcamentos();
+        await carregarOrcamentos();
     } catch (erro) {
         console.error(erro);
         erroLogin.textContent = erro.message;
@@ -101,15 +102,12 @@ async function carregarOrcamentos() {
             return;
         }
 
-        const resposta = await fetch(
-            `${API_URL}/orcamentos/${id}`,
-            {
-                method: "DELETE",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                }
-            }
-        );
+        const resposta = await fetch(`${API_URL}/orcamentos/${id}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
 
         if (!resposta.ok) {
             throw new Error("Erro na API");
@@ -298,15 +296,15 @@ editar.addEventListener("click", async () => {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify({
                     nome,
                     telefone,
                     equipamento,
-                    problema
-                })
-            }
+                    problema,
+                }),
+            },
         );
 
         const resultado = await resposta.json();
