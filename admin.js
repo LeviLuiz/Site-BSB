@@ -101,11 +101,15 @@ async function carregarOrcamentos() {
             return;
         }
 
-        const resposta = await fetch(`${API_URL}/orcamentos`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const resposta = await fetch(
+            `${API_URL}/orcamentos/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            }
+        );
 
         if (!resposta.ok) {
             throw new Error("Erro na API");
@@ -292,18 +296,17 @@ editar.addEventListener("click", async () => {
             `${API_URL}/orcamentos/${orcamentoSelecionado.id}`,
             {
                 method: "PATCH",
-
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
                 },
-
                 body: JSON.stringify({
                     nome,
                     telefone,
                     equipamento,
-                    problema,
-                }),
-            },
+                    problema
+                })
+            }
         );
 
         const resultado = await resposta.json();
