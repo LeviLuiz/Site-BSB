@@ -1,59 +1,19 @@
 const API_URL = "https://bsb-info-api.onrender.com";
 
 const login = document.getElementById("login");
+const painel = document.getElementById("painel");
+
 const formularioLogin = document.getElementById("form-login");
 const erroLogin = document.getElementById("erro-login");
 
-formularioLogin.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("email").value;
-    const senha = document.getElementById("senha").value;
-
-    try {
-        const resposta = await fetch(`${API_URL}/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email,
-                senha,
-            }),
-        });
-
-        const dados = await resposta.json();
-
-        if (!resposta.ok) {
-            throw new Error(dados.erro || "E-mail ou senha incorretos");
-        }
-
-        if (!dados.token) {
-            throw new Error("A API não enviou o token.");
-        }
-
-        localStorage.setItem("token", dados.token);
-
-        login.style.display = "none";
-
-        await carregarOrcamentos();
-    } catch (erro) {
-        console.error(erro);
-        erroLogin.textContent = erro.message;
-    }
-});
-
 const lista = document.getElementById("orcamentos");
 const mensagem = document.getElementById("mensagem");
-
 const total = document.getElementById("total");
 const ultimo = document.getElementById("ultimo");
-
 const atualizar = document.getElementById("atualizar");
 
 const modal = document.getElementById("modal");
 const fecharModal = document.getElementById("fecharModal");
-
 const modalNome = document.getElementById("modalNome");
 const modalTelefone = document.getElementById("modalTelefone");
 const modalEquipamento = document.getElementById("modalEquipamento");
@@ -64,6 +24,57 @@ const excluir = document.getElementById("excluir");
 const editar = document.getElementById("editar");
 
 let orcamentoSelecionado = null;
+
+
+// ===============================
+// LOGIN
+// ===============================
+
+formularioLogin.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    erroLogin.textContent = "";
+
+    try {
+        const resposta = await fetch(`${API_URL}/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                senha
+            })
+        });
+
+        const dados = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(
+                dados.erro || "E-mail ou senha incorretos"
+            );
+        }
+
+        if (!dados.token) {
+            throw new Error("A API não enviou o token.");
+        }
+
+        localStorage.setItem("token", dados.token);
+
+        login.style.display = "none";
+        painel.style.display = "block";
+
+        await carregarOrcamentos();
+
+    } catch (erro) {
+        console.error(erro);
+        erroLogin.textContent = erro.message;
+    }
+});
+
 
 // ===============================
 // FORMATAR DATA
@@ -85,40 +96,50 @@ function formatarData(data) {
     return dataJS.toLocaleString("pt-BR");
 }
 
+
 // ===============================
 // CARREGAR ORÇAMENTOS
 // ===============================
 
 async function carregarOrcamentos() {
+
     mensagem.style.display = "block";
     mensagem.textContent = "Carregando orçamentos...";
 
     lista.innerHTML = "";
 
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        return;
+    }
+
     try {
-        const token = localStorage.getItem("token");
 
-        if (!token) {
-            return;
-        }
+        const resposta = await fetch(
+            `${API_URL}/orcamentos`,
+            {
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        );
 
-        const resposta = await fetch(`${API_URL}/orcamentos/${id}`, {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-        });
+        const dados = await resposta.json();
 
         if (!resposta.ok) {
-            throw new Error("Erro na API");
+            throw new Error(
+                `HTTP ${resposta.status}: ${dados.erro || "Erro na API"}`
+            );
         }
 
-        const orcamentos = await resposta.json();
+        const orcamentos = dados;
 
         total.textContent = orcamentos.length;
 
         if (orcamentos.length > 0) {
-            ultimo.textContent = formatarData(orcamentos[0].data);
+            ultimo.textContent =
+                formatarData(orcamentos[0].data);
         } else {
             ultimo.textContent = "—";
         }
@@ -127,20 +148,24 @@ async function carregarOrcamentos() {
 
         if (orcamentos.length === 0) {
             mensagem.style.display = "block";
-            mensagem.textContent = "Nenhum orçamento recebido.";
-
+            mensagem.textContent =
+                "Nenhum orçamento recebido.";
             return;
         }
 
         orcamentos.forEach((orcamento) => {
-            const elemento = document.createElement("article");
+
+            const elemento =
+                document.createElement("article");
 
             elemento.className = "orcamento";
 
             elemento.innerHTML = `
                 <div>
 
-                    <h3>${escaparHTML(orcamento.nome)}</h3>
+                    <h3>
+                        ${escaparHTML(orcamento.nome)}
+                    </h3>
 
                     <div class="orcamento-info">
 
@@ -183,29 +208,37 @@ async function carregarOrcamentos() {
 
             lista.appendChild(elemento);
         });
+
     } catch (erro) {
+
         console.error(erro);
 
         mensagem.style.display = "block";
-        mensagem.textContent = "Não foi possível carregar os orçamentos.";
+
+        mensagem.textContent =
+            "Não foi possível carregar os orçamentos.";
     }
 }
+
 
 // ===============================
 // ABRIR ORÇAMENTO
 // ===============================
 
 function abrirOrcamento(orcamento) {
+
     orcamentoSelecionado = orcamento;
 
     modalNome.textContent = orcamento.nome;
     modalTelefone.textContent = orcamento.telefone;
     modalEquipamento.textContent = orcamento.equipamento;
     modalProblema.textContent = orcamento.problema;
-    modalData.textContent = formatarData(orcamento.data);
+    modalData.textContent =
+        formatarData(orcamento.data);
 
     modal.classList.add("aberto");
 }
+
 
 // ===============================
 // FECHAR MODAL
@@ -216,95 +249,39 @@ fecharModal.addEventListener("click", () => {
 });
 
 modal.addEventListener("click", (event) => {
+
     if (event.target === modal) {
         modal.classList.remove("aberto");
     }
+
 });
+
 
 // ===============================
 // EXCLUIR
 // ===============================
 
 async function excluirOrcamento(id) {
-    const confirmar = confirm("Tem certeza que deseja excluir este orçamento?");
+
+    const confirmar = confirm(
+        "Tem certeza que deseja excluir este orçamento?"
+    );
 
     if (!confirmar) {
         return;
     }
 
     try {
-        const resposta = await fetch(`${API_URL}/orcamentos/${id}`, {
-            method: "DELETE",
-        });
 
-        const resultado = await resposta.json();
-
-        if (!resposta.ok) {
-            throw new Error(resultado.erro);
-        }
-
-        modal.classList.remove("aberto");
-
-        await carregarOrcamentos();
-    } catch (erro) {
-        console.error(erro);
-
-        alert("Erro ao excluir orçamento.");
-    }
-}
-
-// ===============================
-// EDITAR
-// ===============================
-
-editar.addEventListener("click", async () => {
-    if (!orcamentoSelecionado) {
-        return;
-    }
-
-    const nome = prompt("Nome:", orcamentoSelecionado.nome);
-
-    if (nome === null) {
-        return;
-    }
-
-    const telefone = prompt("Telefone:", orcamentoSelecionado.telefone);
-
-    if (telefone === null) {
-        return;
-    }
-
-    const equipamento = prompt(
-        "Equipamento:",
-        orcamentoSelecionado.equipamento,
-    );
-
-    if (equipamento === null) {
-        return;
-    }
-
-    const problema = prompt("Problema:", orcamentoSelecionado.problema);
-
-    if (problema === null) {
-        return;
-    }
-
-    try {
         const resposta = await fetch(
-            `${API_URL}/orcamentos/${orcamentoSelecionado.id}`,
+            `${API_URL}/orcamentos/${id}`,
             {
-                method: "PATCH",
+                method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({
-                    nome,
-                    telefone,
-                    equipamento,
-                    problema,
-                }),
-            },
+                    "Authorization":
+                        `Bearer ${localStorage.getItem("token")}`
+                }
+            }
         );
 
         const resultado = await resposta.json();
@@ -316,24 +293,112 @@ editar.addEventListener("click", async () => {
         modal.classList.remove("aberto");
 
         await carregarOrcamentos();
+
     } catch (erro) {
+
+        console.error(erro);
+
+        alert("Erro ao excluir orçamento.");
+    }
+}
+
+
+// ===============================
+// EDITAR
+// ===============================
+
+editar.addEventListener("click", async () => {
+
+    if (!orcamentoSelecionado) {
+        return;
+    }
+
+    const nome = prompt(
+        "Nome:",
+        orcamentoSelecionado.nome
+    );
+
+    if (nome === null) return;
+
+    const telefone = prompt(
+        "Telefone:",
+        orcamentoSelecionado.telefone
+    );
+
+    if (telefone === null) return;
+
+    const equipamento = prompt(
+        "Equipamento:",
+        orcamentoSelecionado.equipamento
+    );
+
+    if (equipamento === null) return;
+
+    const problema = prompt(
+        "Problema:",
+        orcamentoSelecionado.problema
+    );
+
+    if (problema === null) return;
+
+    try {
+
+        const resposta = await fetch(
+            `${API_URL}/orcamentos/${orcamentoSelecionado.id}`,
+            {
+                method: "PATCH",
+
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization":
+                        `Bearer ${localStorage.getItem("token")}`
+                },
+
+                body: JSON.stringify({
+                    nome,
+                    telefone,
+                    equipamento,
+                    problema
+                })
+            }
+        );
+
+        const resultado = await resposta.json();
+
+        if (!resposta.ok) {
+            throw new Error(resultado.erro);
+        }
+
+        modal.classList.remove("aberto");
+
+        await carregarOrcamentos();
+
+    } catch (erro) {
+
         console.error(erro);
 
         alert("Erro ao atualizar orçamento.");
     }
+
 });
+
 
 // ===============================
 // ATUALIZAR
 // ===============================
 
-atualizar.addEventListener("click", carregarOrcamentos);
+atualizar.addEventListener(
+    "click",
+    carregarOrcamentos
+);
+
 
 // ===============================
 // SEGURANÇA BÁSICA
 // ===============================
 
 function escaparHTML(texto) {
+
     const div = document.createElement("div");
 
     div.textContent = texto ?? "";
