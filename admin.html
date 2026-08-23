@@ -1,133 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Administração — BSB Info</title>
+        <title>Administração — BSB Info</title>
 
-    <link rel="stylesheet" href="admin.css">
-    <link rel="icon" href="favicon.svg">
-</head>
+        <link rel="stylesheet" href="admin.css" />
 
-<body>
+        <link rel="icon" href="favicon.svg" />
+    </head>
 
-    <header>
-        <div>
-            <h1>BSB Info</h1>
-            <span>Painel administrativo</span>
+    <body>
+        <!-- LOGIN -->
+
+        <div id="login">
+            <div class="login-caixa">
+                <h1>BSB Info</h1>
+
+                <span>Painel administrativo</span>
+
+                <form id="form-login">
+                    <div class="campo">
+                        <label for="email">E-mail</label>
+
+                        <input type="email" id="email" required />
+                    </div>
+
+                    <div class="campo">
+                        <label for="senha">Senha</label>
+
+                        <input type="password" id="senha" required />
+                    </div>
+
+                    <button type="submit" class="botao">Entrar</button>
+
+                    <p id="erro-login"></p>
+                </form>
+            </div>
         </div>
 
-        <a href="index.html">Voltar ao site</a>
-    </header>
+        <!-- PAINEL ADMINISTRATIVO -->
 
-
-    <main>
-
-        <section class="topo">
-            <div>
-                <p class="destaque">ADMINISTRAÇÃO</p>
-                <h2>Orçamentos</h2>
-                <p>Solicitações recebidas pelo site.</p>
-            </div>
-
-            <button id="atualizar">
-                Atualizar
-            </button>
-        </section>
-
-
-        <section class="resumo">
-
-            <div class="resumo-card">
-                <span>Total</span>
-                <strong id="total">0</strong>
-            </div>
-
-            <div class="resumo-card">
-                <span>Último pedido</span>
-                <strong id="ultimo">—</strong>
-            </div>
-
-        </section>
-
-
-        <section>
-
-            <div id="mensagem" class="mensagem">
-                Carregando orçamentos...
-            </div>
-
-            <div id="orcamentos" class="orcamentos"></div>
-
-        </section>
-
-    </main>
-
-
-    <!-- MODAL -->
-
-    <div id="modal" class="modal">
-
-        <div class="modal-conteudo">
-
-            <button id="fecharModal" class="fechar">
-                ×
-            </button>
-
-            <p class="destaque">ORÇAMENTO</p>
-
-            <h2 id="modalNome">—</h2>
-
-            <div class="dados">
-
+        <div id="painel" style="display: none">
+            <header>
                 <div>
-                    <span>Telefone</span>
-                    <strong id="modalTelefone">—</strong>
+                    <h1>BSB Info</h1>
+
+                    <span>Painel administrativo</span>
                 </div>
 
-                <div>
-                    <span>Equipamento</span>
-                    <strong id="modalEquipamento">—</strong>
+                <a href="index.html"> Voltar ao site </a>
+            </header>
+
+            <main>
+                <!-- TOPO -->
+
+                <section class="topo">
+                    <div>
+                        <p class="destaque">ADMINISTRAÇÃO</p>
+
+                        <h2>Orçamentos</h2>
+
+                        <p>Solicitações recebidas pelo site.</p>
+                    </div>
+
+                    <button id="atualizar">Atualizar</button>
+                </section>
+
+                <!-- RESUMO -->
+
+                <section class="resumo">
+                    <div class="resumo-card">
+                        <span> Total </span>
+
+                        <strong id="total"> 0 </strong>
+                    </div>
+
+                    <div class="resumo-card">
+                        <span> Último pedido </span>
+
+                        <strong id="ultimo"> — </strong>
+                    </div>
+                </section>
+
+                <!-- ORÇAMENTOS -->
+
+                <section>
+                    <div id="mensagem" class="mensagem">
+                        Carregando orçamentos...
+                    </div>
+
+                    <div id="orcamentos" class="orcamentos"></div>
+                </section>
+            </main>
+
+            <!-- MODAL -->
+
+            <div id="modal" class="modal">
+                <div class="modal-conteudo">
+                    <button id="fecharModal" class="fechar">×</button>
+
+                    <p class="destaque">ORÇAMENTO</p>
+
+                    <h2 id="modalNome">—</h2>
+
+                    <div class="dados">
+                        <div>
+                            <span> Telefone </span>
+
+                            <strong id="modalTelefone"> — </strong>
+                        </div>
+
+                        <div>
+                            <span> Equipamento </span>
+
+                            <strong id="modalEquipamento"> — </strong>
+                        </div>
+
+                        <div>
+                            <span> Data </span>
+
+                            <strong id="modalData"> — </strong>
+                        </div>
+                    </div>
+
+                    <div class="problema">
+                        <span> Problema informado </span>
+
+                        <p id="modalProblema">—</p>
+                    </div>
+
+                    <div class="modal-acoes">
+                        <button id="editar" class="btn-editar">Editar</button>
+
+                        <button id="excluir" class="btn-excluir">
+                            Excluir orçamento
+                        </button>
+                    </div>
                 </div>
-
-                <div>
-                    <span>Data</span>
-                    <strong id="modalData">—</strong>
-                </div>
-
             </div>
-
-            <div class="problema">
-
-                <span>Problema informado</span>
-
-                <p id="modalProblema">
-                    —
-                </p>
-
-            </div>
-
-            <div class="modal-acoes">
-
-                <button id="editar" class="btn-editar">
-                    Editar
-                </button>
-
-                <button id="excluir" class="btn-excluir">
-                    Excluir orçamento
-                </button>
-
-            </div>
-
         </div>
 
-    </div>
-
-
-    <script src="admin.js"></script>
-
-</body>
-
+        <script src="admin.js"></script>
+    </body>
 </html>
