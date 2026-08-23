@@ -354,3 +354,75 @@ main {
         flex-direction: column;
     }
 }
+
+/* ===============================
+   LOGIN
+=============================== */
+
+#login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.login-caixa {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    background: #101522;
+    border: 1px solid #202636;
+    border-radius: 15px;
+}
+
+.login-caixa h1 {
+    font-size: 28px;
+    margin-bottom: 5px;
+}
+
+.login-caixa > span {
+    color: #aab1c2;
+}
+
+#form-login {
+    margin-top: 35px;
+}
+
+#form-login .campo {
+    margin-bottom: 20px;
+}
+
+#form-login label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+#form-login input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #202636;
+    border-radius: 8px;
+    background: #0b0f19;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    outline: none;
+}
+
+#form-login input:focus {
+    border-color: #4f8cff;
+}
+
+#form-login .botao {
+    width: 100%;
+    border: none;
+    margin-top: 5px;
+}
+
+#erro-login {
+    color: #ff5c5c;
+    margin-top: 15px;
+    text-align: center;
+}
